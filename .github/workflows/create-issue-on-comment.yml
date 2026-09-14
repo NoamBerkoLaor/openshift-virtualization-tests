@@ -27,7 +27,7 @@ jobs:
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
-          # Use sed/awk to find "Learnings added" line (handling icons/formatting) and grab text following it
+          # Find "Learnings added" line and grab text following it
           LEARNING_CONTENT=$(echo "$COMMENT_BODY" | awk '/Learnings added/{flag=1; next} flag')
           
           # Fallback: if extracting text fails, use the full comment body
@@ -36,6 +36,6 @@ jobs:
           fi
           
           gh issue create \
-            --title "CodeRabbit Learning from PR #${PR_NUMBER}" \
+            --title "CodeRabbit Learning from PR #${PR_NUMBER} by ${COMMENT_AUTHOR}" \
             --body "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR}):
           ${LEARNING_CONTENT}"
