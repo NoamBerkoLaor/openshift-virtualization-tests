@@ -37,4 +37,5 @@ jobs:
           
           gh issue create \
             --title "CodeRabbit Learning from PR #${PR_NUMBER}" \
-            --body "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR}):\n\n${LEARNING_CONTENT}"
+            --body "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR}):
+          ${LEARNING_CONTENT}"
