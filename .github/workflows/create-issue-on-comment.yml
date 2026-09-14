@@ -11,20 +11,30 @@ permissions:
 
 jobs:
   create-issue:
-    if: github.event.issue.pull_request != null
+    if: >
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, 'Learnings added')
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create Issue using GitHub CLI
+      - name: Extract Learning Content and Create Issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.issue.number }}
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
+          # Use sed/awk to find "Learnings added" line (handling icons/formatting) and grab text following it
+          LEARNING_CONTENT=$(echo "$COMMENT_BODY" | awk '/Learnings added/{flag=1; next} flag')
+          
+          # Fallback: if extracting text fails, use the full comment body
+          if [ -z "$LEARNING_CONTENT" ]; then
+            LEARNING_CONTENT="$COMMENT_BODY"
+          fi
+          
           gh issue create \
-            --title "Learning from PR #${PR_NUMBER} by ${COMMENT_AUTHOR}" \
-            --body "### Content from PR #${PR_NUMBER} Comment:\n\n${COMMENT_BODY}"
+            --title "CodeRabbit Learning from PR #${PR_NUMBER}" \
+            --body "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR}):\n\n${LEARNING_CONTENT}"
