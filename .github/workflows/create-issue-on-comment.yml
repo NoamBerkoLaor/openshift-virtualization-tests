@@ -1,0 +1,26 @@
+name: Create Issue from PR Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  create-issue:
+    if: github.event.issue.pull_request != null
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Issue using GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          gh issue create \
+            --title "Learning from PR #${PR_NUMBER} by ${COMMENT_AUTHOR}" \
+            --body "### Content from PR #${PR_NUMBER} Comment:\n\n${COMMENT_BODY}"
