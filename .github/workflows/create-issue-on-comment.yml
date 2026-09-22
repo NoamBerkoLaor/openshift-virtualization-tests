@@ -1,7 +1,11 @@
 name: Create Issue from CodeRabbit Learning Comment
 
 on:
+  # PR Conversation-tab comments
   issue_comment:
+    types: [created]
+  # Inline review-thread replies (Files changed)
+  pull_request_review_comment:
     types: [created]
 
 permissions:
@@ -11,8 +15,13 @@ permissions:
 
 jobs:
   create-issue:
+    # issue_comment: only PR comments (not plain issues)
+    # pull_request_review_comment: always on a PR
     if: >
-      github.event.issue.pull_request != null &&
+      (
+        (github.event_name == 'issue_comment' && github.event.issue.pull_request != null) ||
+        github.event_name == 'pull_request_review_comment'
+      ) &&
       contains(github.event.comment.user.login, 'coderabbitai') &&
       contains(github.event.comment.body, 'Learnings added')
     runs-on: ubuntu-latest
@@ -24,7 +33,7 @@ jobs:
       - name: Extract learning content and create issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.issue.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
