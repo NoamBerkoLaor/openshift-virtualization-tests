@@ -1,7 +1,6 @@
 name: Create Issue from CodeRabbit Learning Comment
 
 on:
-  # PR Conversation-tab comments
   issue_comment:
     types: [created]
   # Inline review-thread replies (Files changed)
@@ -15,7 +14,7 @@ permissions:
 
 jobs:
   create-issue:
-    # issue_comment: only PR comments (not plain issues)
+    # issue_comment: only PR comments
     # pull_request_review_comment: always on a PR
     if: >
       (
@@ -39,9 +38,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Text after the "Learnings added" line (the learning description)
-          LEARNING_CONTENT=$(printf '%s\n' "${COMMENT_BODY}" | awk '/Learnings added/{flag=1; next} flag')
-
+          # Text after "Learnings added", stopping before CodeRabbit's boilerplate footer
+          LEARNING_CONTENT=$(printf '%s\n' "${COMMENT_BODY}" | awk '
+            /Learnings added/ {flag=1; next}
+            flag && (/^Note: Learnings are effective/ || /You are interacting with an AI system/) {exit}
+            flag {print}
+          ')
+          
+          #if nothing was extracted
           if [ -z "${LEARNING_CONTENT}" ]; then
             LEARNING_CONTENT="${COMMENT_BODY}"
           fi
