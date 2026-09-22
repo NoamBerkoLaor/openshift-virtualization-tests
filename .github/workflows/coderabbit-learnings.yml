@@ -2,8 +2,9 @@ name: Sunday CodeRabbit Learnings Digest
 
 on:
   schedule:
-    # Runs every Sunday morning at 08:00 AM UTC
-    - cron: '0 8 * * 0'
+    # Temporary test: 11:30 Israel time (08:30 UTC) every day
+    # Restore Sunday after test: '0 8 * * 0'
+    - cron: '30 8 * * *'
   workflow_dispatch: # Allows manual execution anytime from the Actions tab
 
 permissions:
@@ -22,13 +23,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
+          # NoamBerkoLaor/openshift-virtualization-tests (fork) — for this test only
+          # Upstream RedHatQE ID is 716108424
+          REPOSITORY_ID: "1335733411"
         run: |
           set -euo pipefail
 
-          # 1. Fetch learnings created in the last 7 days
+          # 1. Fetch last-week learnings for this repository ID
           HTTP_CODE=$(curl -sS -o /tmp/learnings.json -w "%{http_code}" \
             --request GET \
-            --url "https://api.coderabbit.ai/v1/learnings?stat_filter=created_this_week" \
+            --url "https://api.coderabbit.ai/v1/learnings?stat_filter=created_this_week&repository_ids=${REPOSITORY_ID}" \
             --header "x-coderabbitai-api-key: ${CODERABBIT_API_KEY}")
 
           if [ "${HTTP_CODE}" -lt 200 ] || [ "${HTTP_CODE}" -ge 300 ]; then
@@ -37,14 +41,14 @@ jobs:
             exit 1
           fi
 
-          # 2. Extract learning text from each object and format as bullets
+          # 2. Extract learning text and format as bullets
           DESCRIPTIONS=$(jq -r '
             .data[]? | "- " + (.learning // .description // empty)
           ' /tmp/learnings.json)
 
-          # 3. Stop if no new learnings this week
+          # 3. Stop if no matching learnings this week
           if [ -z "${DESCRIPTIONS}" ]; then
-            echo "No new learnings found for this week."
+            echo "No new learnings found for repository_id=${REPOSITORY_ID} this week."
             exit 0
           fi
 
@@ -52,7 +56,7 @@ jobs:
           {
             echo "## CodeRabbit Learnings"
             echo
-            echo "Here are all descriptions pulled from CodeRabbit's API:"
+            echo "Learnings for repository_id \`${REPOSITORY_ID}\` in the last 7 days:"
             echo
             echo "${DESCRIPTIONS}"
           } > /tmp/issue_body.md
