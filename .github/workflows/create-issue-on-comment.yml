@@ -38,16 +38,31 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Text after "Learnings added", stopping before CodeRabbit's boilerplate footer
+          # From "Learnings added" until the end of that section
           LEARNING_CONTENT=$(printf '%s\n' "${COMMENT_BODY}" | awk '
-            /Learnings added/ {flag=1; next}
-            flag && (/^Note: Learnings are effective/ || /You are interacting with an AI system/) {exit}
-            flag {print}
+            /Learnings added/ { section=1; next }
+            !section { next }
+
+            /Learnings used/ { exit }
+            /Note:[[:space:]]*Learnings are effective/ { exit }
+            /\*\*Note:\*\*[[:space:]]*Learnings are effective/ { exit }
+            /Learnings are effective only in the context/ { exit }
+            /You are interacting with an AI system/ { exit }
+            /manage existing learnings in the/ { exit }
+            /Review thread resolved/ { exit }
+            /<\/details>/ { exit }
+
+            /<\/?details/ { next }
+            /<\/?summary/ { next }
+
+            { print }
           ')
-          
-          #if nothing was extracted
+
+          LEARNING_CONTENT=$(printf '%s\n' "${LEARNING_CONTENT}" | sed '/./,$!d')
+
           if [ -z "${LEARNING_CONTENT}" ]; then
-            LEARNING_CONTENT="${COMMENT_BODY}"
+            echo "Could not extract Learnings added content (refusing full comment fallback)."
+            exit 1
           fi
 
           {
