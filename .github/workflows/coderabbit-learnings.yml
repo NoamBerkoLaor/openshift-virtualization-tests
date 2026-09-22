@@ -1,0 +1,63 @@
+name: Sunday CodeRabbit Learnings Digest
+
+on:
+  schedule:
+    # Runs every Sunday morning at 08:00 AM UTC
+    - cron: '0 8 * * 0'
+  workflow_dispatch: # Allows manual execution anytime from the Actions tab
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  fetch-and-create-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Learnings from CodeRabbit API and Create Issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
+        run: |
+          set -euo pipefail
+
+          # 1. Fetch learnings created in the last 7 days
+          HTTP_CODE=$(curl -sS -o /tmp/learnings.json -w "%{http_code}" \
+            --request GET \
+            --url "https://api.coderabbit.ai/v1/learnings?stat_filter=created_this_week" \
+            --header "x-coderabbitai-api-key: ${CODERABBIT_API_KEY}")
+
+          if [ "${HTTP_CODE}" -lt 200 ] || [ "${HTTP_CODE}" -ge 300 ]; then
+            echo "CodeRabbit API request failed with HTTP ${HTTP_CODE}"
+            cat /tmp/learnings.json
+            exit 1
+          fi
+
+          # 2. Extract learning text from each object and format as bullets
+          DESCRIPTIONS=$(jq -r '
+            .data[]? | "- " + (.learning // .description // empty)
+          ' /tmp/learnings.json)
+
+          # 3. Stop if no new learnings this week
+          if [ -z "${DESCRIPTIONS}" ]; then
+            echo "No new learnings found for this week."
+            exit 0
+          fi
+
+          # 4. Write issue body to a file so newlines are real, not literal \n
+          {
+            echo "## CodeRabbit Learnings"
+            echo
+            echo "Here are all descriptions pulled from CodeRabbit's API:"
+            echo
+            echo "${DESCRIPTIONS}"
+          } > /tmp/issue_body.md
+
+          # 5. Create the summary GitHub issue
+          gh issue create \
+            --title "CodeRabbit Weekly Learnings Digest ($(date +%Y-%m-%d))" \
+            --body-file /tmp/issue_body.md
