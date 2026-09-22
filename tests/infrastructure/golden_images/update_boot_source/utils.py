@@ -273,14 +273,18 @@ def fedora_dv_for_data_source(name: str, data_source: DataSource, client: Dynami
         DataVolume: The created and ready DataVolume resource.
     """
     with DataVolume(
-        client=client,
-        name=name,
-        namespace=data_source.namespace,
-        source_dict=construct_datavolume_source_dict(source=REGISTRY_STR, url=DEFAULT_FEDORA_REGISTRY_URL),
-        size=Images.Fedora.DEFAULT_DV_SIZE,
-        storage_class=py_config["default_storage_class"],
-        annotations=BIND_IMMEDIATE_ANNOTATION,
-        api_name="storage",
+            client,
+            name,
+
+            data_source.namespace,
+            construct_datavolume_source_dict(source=REGISTRY_STR, url=DEFAULT_FEDORA_REGISTRY_URL),
+
+            Images.Fedora.DEFAULT_DV_SIZE,
+
+            py_config["default_storage_class"],
+            BIND_IMMEDIATE_ANNOTATION,
+
+            "storage",
     ) as dv:
         dv.wait_for_dv_success()
         wait_for_condition_message_value(
