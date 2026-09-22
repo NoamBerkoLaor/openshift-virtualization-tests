@@ -215,7 +215,9 @@ def wait_for_existing_auto_update_data_import_crons(admin_client: DynamicClient,
             _auto_boot_data_import_cron_prefixes=auto_boot_data_import_cron_prefixes,
         ):
             if not sample:
+
                 return
+
     except TimeoutExpiredError:
         LOGGER.error(f"Some dataImportCron resources are missing: {sample}")
         raise
@@ -234,6 +236,8 @@ def wait_for_created_volume_from_data_import_cron(custom_data_source: DataSource
     Raises:
         TimeoutExpiredError: If the volume is not created within 5 minutes.
     """
+
+
     try:
         for sample in TimeoutSampler(
             wait_timeout=TIMEOUT_5MIN,
@@ -248,6 +252,9 @@ def wait_for_created_volume_from_data_import_cron(custom_data_source: DataSource
             f"DataSource conditions: {custom_data_source.instance.get('status', {}).get('conditions')}"
         )
         raise
+
+
+
 
 
 @contextmanager
