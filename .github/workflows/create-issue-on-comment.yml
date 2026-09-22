@@ -43,6 +43,7 @@ jobs:
             /Learnings added/ { section=1; next }
             !section { next }
 
+            # Stop extracting (exclude footer / later sections)
             /Learnings used/ { exit }
             /Note:[[:space:]]*Learnings are effective/ { exit }
             /\*\*Note:\*\*[[:space:]]*Learnings are effective/ { exit }
