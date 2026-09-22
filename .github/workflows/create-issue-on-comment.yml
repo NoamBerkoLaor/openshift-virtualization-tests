@@ -1,4 +1,4 @@
-name: Create Issue from PR Comment
+name: Create Issue from CodeRabbit Learning Comment
 
 on:
   issue_comment:
@@ -13,6 +13,7 @@ jobs:
   create-issue:
     if: >
       github.event.issue.pull_request != null &&
+      contains(github.event.comment.user.login, 'coderabbitai') &&
       contains(github.event.comment.body, 'Learnings added')
     runs-on: ubuntu-latest
 
@@ -20,22 +21,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract Learning Content and Create Issue
+      - name: Extract learning content and create issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.issue.number }}
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
-          # Find "Learnings added" line and grab text following it
-          LEARNING_CONTENT=$(echo "$COMMENT_BODY" | awk '/Learnings added/{flag=1; next} flag')
-          
-          # Fallback: if extracting text fails, use the full comment body
-          if [ -z "$LEARNING_CONTENT" ]; then
-            LEARNING_CONTENT="$COMMENT_BODY"
+          set -euo pipefail
+
+          # Text after the "Learnings added" line (the learning description)
+          LEARNING_CONTENT=$(printf '%s\n' "${COMMENT_BODY}" | awk '/Learnings added/{flag=1; next} flag')
+
+          if [ -z "${LEARNING_CONTENT}" ]; then
+            LEARNING_CONTENT="${COMMENT_BODY}"
           fi
-          
+
+          {
+            echo "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR})"
+            echo
+            printf '%s\n' "${LEARNING_CONTENT}"
+          } > /tmp/issue_body.md
+
           gh issue create \
-            --title "CodeRabbit Learning from PR #${PR_NUMBER} by ${COMMENT_AUTHOR}" \
-            --body "### Learning extracted from PR #${PR_NUMBER} (by @${COMMENT_AUTHOR}):
-          ${LEARNING_CONTENT}"
+            --title "CodeRabbit Learning from PR #${PR_NUMBER}" \
+            --body-file /tmp/issue_body.md
