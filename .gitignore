@@ -131,5 +131,8 @@ docs/source/rst
 # Claude Code assistant
 .claude/
 
+# Local Jira token for Cursor MCP
+.cursor/mcp.json
+
 # For local run (debug).
 ocp_resources
