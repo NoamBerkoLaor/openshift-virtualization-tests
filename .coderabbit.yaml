@@ -319,8 +319,11 @@ reviews:
         where "Learnings added" appears mid-sentence.
 
         For each "Learnings added" comment found, check whether any human
-        (i.e. not a bot account) posted a reply in the same thread, or a top-level comment, after that
-        "Learnings added" comment was posted. If a human replied, skip it —
+        (i.e. not a bot account) posted a reply in the SAME thread as that
+        specific "Learnings added" comment. Only a direct reply in that
+        thread counts as acknowledgment. Do NOT treat other PR conversation
+        comments, other review threads, or unrelated later human comments as
+        acknowledgment. If a human replied in that same thread, skip it —
         it was acknowledged.
 
         If no human replied to a "Learnings added" comment, extract only the
