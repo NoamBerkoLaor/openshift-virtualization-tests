@@ -22,7 +22,7 @@ from utilities.infra import (
     get_resources_by_name_prefix,
 )
 from utilities.storage import (
-    check_disk_count_in_vm,
+    assert_guest_disk_count,
     create_dv,
     verify_hpp_pool_health,
     verify_hpp_pool_pvcs_are_bound,
@@ -41,9 +41,7 @@ NODE_SELECTOR = "node_selector"
 HCO_NODE_PLACEMENT = {
     "infra": {},
     "workloads": {
-        "nodePlacement": {
-            "nodeSelector": {HPP_KEY: HPP_VAL},
-        }
+        "nodeSelector": {HPP_KEY: HPP_VAL},
     },
 }
 
@@ -267,7 +265,7 @@ def verify_hpp_cr_deleted_successfully(
 
 
 def check_disk_count_in_vm_and_image_location(vm, dv, hpp_csi_storage_class, admin_client):
-    check_disk_count_in_vm(vm=vm)
+    assert_guest_disk_count(vm=vm)
     assert_image_location_via_node_utility_pod(
         dv=dv,
         admin_client=admin_client,

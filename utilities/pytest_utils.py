@@ -1,4 +1,5 @@
 import getpass
+import hashlib
 import importlib
 import json
 import logging
@@ -11,6 +12,8 @@ import sys
 import tempfile
 from collections import defaultdict
 from typing import TYPE_CHECKING, Any
+
+import paramiko.pkey
 
 if TYPE_CHECKING:
     from typing import TypedDict
@@ -417,7 +420,11 @@ def get_artifactory_server_url(cluster_host_url, session):
 
 
 def get_cnv_version_explorer_url(pytest_config):
-    if pytest_config.getoption("install") or pytest_config.getoption("upgrade") in ("eus", "cnv"):
+    if (
+        pytest_config.getoption("install")
+        or pytest_config.getoption("upgrade") in ("eus", "cnv")
+        or pytest_config.getoption("upgrade_custom") in ("eus", "cnv")
+    ):
         LOGGER.info("Checking for cnv version explorer url:")
         version_explorer_url = os.environ.get("CNV_VERSION_EXPLORER_URL")
         if not version_explorer_url:
@@ -914,3 +921,34 @@ def assert_incremental_classes_fully_collected(items: list[pytest.Item]) -> None
 
 def _is_xfail_no_run(method: object) -> bool:
     return any(mark.name == "xfail" and mark.kwargs.get("run") is False for mark in getattr(method, "pytestmark", []))
+
+
+def filter_post_test_alerts_tests(items: list[pytest.Item], config: pytest.Config) -> list[pytest.Item]:
+    """Filter out post-test alert tests when explicitly skipped or running install tests.
+
+    Args:
+        items: Collected pytest test items.
+        config: Pytest config object.
+
+    Returns:
+        Filtered list of test items.
+    """
+    if config.getoption("--skip-post-test-alerts") or config.getoption("--install"):
+        discard_tests, items_to_return = remove_tests_from_list(items=items, filter_str="post_test_alerts")
+        config.hook.pytest_deselected(items=discard_tests)
+        return items_to_return
+    return items
+
+
+def patch_paramiko_for_fips() -> None:
+    """Patch paramiko's PKey.get_fingerprint to use usedforsecurity=False for FIPS compatibility.
+
+    Workaround for https://github.com/paramiko/paramiko/issues/396: PKey.get_fingerprint()
+    calls hashlib.md5() without usedforsecurity=False, raising UnsupportedDigestmodError on
+    FIPS-enabled systems. MD5 here is used only for display/logging purposes, not security.
+    """
+    type.__setattr__(
+        paramiko.pkey.PKey,
+        "get_fingerprint",
+        lambda self: hashlib.md5(self.asbytes(), usedforsecurity=False).digest(),
+    )

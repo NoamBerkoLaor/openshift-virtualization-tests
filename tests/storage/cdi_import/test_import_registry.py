@@ -7,12 +7,13 @@ from ocp_resources.datavolume import DataVolume
 from ocp_resources.resource import Resource
 
 from tests.storage.constants import QUAY_FEDORA_CONTAINER_IMAGE
+from tests.storage.stop_status_utils import dv_stop_status_restart_threshold
 from tests.storage.utils import wait_for_dv_condition_message
 from utilities.constants import Images
 from utilities.constants.images import OS_FLAVOR_FEDORA
 from utilities.constants.storage import REGISTRY_STR
 from utilities.constants.timeouts import TIMEOUT_5MIN
-from utilities.storage import ErrorMsg, check_disk_count_in_vm, create_dv, create_vm_from_dv
+from utilities.storage import ErrorMsg, assert_guest_disk_count, create_dv, create_vm_from_dv
 from utilities.virt import running_vm
 
 pytestmark = pytest.mark.post_upgrade
@@ -103,7 +104,10 @@ def test_public_registry_data_volume(
         size=Images.Fedora.DEFAULT_DV_SIZE,
         storage_class=storage_class_name_scope_function,
     ) as dv:
-        dv.wait_for_dv_success()
+        dv.wait_for_dv_success(
+            stop_status_func=dv_stop_status_restart_threshold,
+            dv=dv,
+        )
         create_vm_from_dv(
             client=unprivileged_client,
             dv=dv,
@@ -152,7 +156,10 @@ def test_public_registry_data_volume_low_capacity(unprivileged_client, namespace
         storage_class=dv_param["storage_class"],
         size="6Gi",
     ) as dv:
-        dv.wait_for_dv_success()
+        dv.wait_for_dv_success(
+            stop_status_func=dv_stop_status_restart_threshold,
+            dv=dv,
+        )
         with create_vm_from_dv(
             client=unprivileged_client,
             dv=dv,
@@ -161,7 +168,7 @@ def test_public_registry_data_volume_low_capacity(unprivileged_client, namespace
             memory_guest=Images.Fedora.DEFAULT_MEMORY_SIZE,
             wait_for_interfaces=True,
         ) as vm_dv:
-            check_disk_count_in_vm(vm=vm_dv)
+            assert_guest_disk_count(vm=vm_dv)
 
 
 @pytest.mark.sno
