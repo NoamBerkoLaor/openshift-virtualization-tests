@@ -311,8 +311,17 @@ reviews:
       - name: "Document Learnings added comments after merge"
         enabled: true
         prompt: |
-          Scan every CodeRabbit-authored "Learnings added" heading on this merged
-          PR in all three places GitHub stores review text:
+          ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
+          default on every pull request.
+
+          "Learnings added" headings almost always appear AFTER the first review, as later conversation or
+          review-thread comments. Their absence at review time must NEVER cause
+          this action to be unchecked or omitted. Evaluate whether work is
+          needed only at merge time, using the final PR conversation state.
+
+          At merge time, scan every CodeRabbit-authored "Learnings added"
+          heading on this merged PR in all three places GitHub stores review
+          text:
           - top-level conversation comments
           - inline review comments (Files changed)
           - pull request review bodies (the summary body of a submitted review)
@@ -328,10 +337,10 @@ reviews:
             comment in the SAME review thread. A human comment that appears
             before the "Learnings added" comment does NOT count as
             acknowledgment, still document that learning.
-          - Top-level conversation comments and pull request review bodies: a later human comment in the
-            PR conversation is NOT a reply to that learning and does NOT
-            count as acknowledgment. Treat them as unacknowledged and document
-            them.
+          - Top-level conversation comments and pull request review bodies: a
+            later human comment in the PR conversation is NOT a reply to that
+            learning and does NOT count as acknowledgment. Treat them as
+            unacknowledged and document them.
 
           Do NOT treat other review threads, or unrelated later human comments,
           as acknowledgment of an inline learning.
@@ -354,9 +363,11 @@ reviews:
              for that path.
 
           Apply all of those text modifications in the sandbox. If the sandbox
-          diff is empty (every remaining learning was already documented, or
-          there were no file changes), do not open a follow-up PR; report that
-          no update was needed.
+          diff is empty (every remaining learning was already documented, there
+          were no file changes, there were no qualifying "Learnings added"
+          headings, or all remaining learnings were acknowledged in the same
+          inline review thread), do not open a follow-up PR; report that no
+          update was needed.
           Otherwise open ONE follow-up pull request against the default branch
           for this merged PR. Include every remaining (unacknowledged) learning
           from this merge in that single PR. Put a link to this merged PR in
@@ -367,10 +378,6 @@ reviews:
           Do not duplicate rules that are already documented. Do not invent
           rules that were not in those learnings. Keep edits minimal and in the
           existing style of AGENTS.md and .coderabbit.yaml.
-
-          If there are no qualifying "Learnings added" comments, or all of them
-          were acknowledged by a human reply in the same inline review thread,
-          do nothing.
 
 chat:
   auto_reply: true
