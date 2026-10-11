@@ -314,7 +314,7 @@ reviews:
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
 
-        "Learnings added" markers almost always appear AFTER the first review , as later conversation or review-thread comments.
+        "Learnings added" markers almost always appear AFTER the first review, as later conversation or review-thread comments.
         Their absence at review time must NEVER cause this action to be
         unchecked or omitted. Evaluate whether work is needed only at merge
         time, using the final PR conversation state and the PR context
