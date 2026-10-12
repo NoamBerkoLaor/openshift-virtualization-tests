@@ -310,19 +310,18 @@ reviews:
   post_merge_actions:
     # Temporary smoke test: verify follow-up PR creation only.
     # Re-enable the learnings action after this check.
-    - name: "Smoke test: open follow-up PR after merge"
+    - name: "open follow-up PR after merge"
       enabled: true
       prompt: |
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
 
         This is a simple smoke test of follow-up PR creation after merge.
-        Do not scan comments. Do not update AGENTS.md or .coderabbit.yaml.
 
         1. Create or overwrite scripts/post_merge_followup_smoke.txt with a
            single line: "Merged PR smoke test".
         2. Open ONE follow-up pull request against the default branch.
-        3. Title: "chore: post-merge follow-up smoke test"
+        3. Title: "post-merge follow-up smoke test"
         4. Body must state that the source PR was merged and include a link
            to this merged PR.
         5. If follow-up PR creation fails, report the failure and do not
