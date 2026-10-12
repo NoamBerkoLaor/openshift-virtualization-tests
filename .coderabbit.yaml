@@ -308,24 +308,50 @@ reviews:
       enabled: false
 
   post_merge_actions:
-    # Temporary smoke test: verify follow-up PR creation only.
-    # Re-enable the learnings action after this check.
-    - name: "open follow-up PR after merge"
+    # Temporary diagnostic: discover which comment sources post-merge can read.
+    # Replace with the learnings action once comment access is confirmed.
+    - name: "Diagnose post-merge comment access"
       enabled: true
       prompt: |
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
 
-        This is a simple smoke test of follow-up PR creation after merge.
+        Goal: report what comment data this post-merge run can actually read.
+        Do not update AGENTS.md. Do not invent comments that were not readable.
 
-        1. Create or overwrite scripts/post_merge_followup_smoke.txt with a
-           single line: "Merged PR smoke test".
-        2. Open ONE follow-up pull request against the default branch.
-        3. Title: "post-merge follow-up smoke test"
-        4. Body must state that the source PR was merged and include a link
-           to this merged PR.
-        5. If follow-up PR creation fails, report the failure and do not
-           claim success.
+        Write scripts/post_merge_comment_access_report.md with these sections:
+
+        ## Supplied PR context
+        For each source below, state Available or Missing, and if Available
+        give the count of items and whether any contain the phrase
+        "Learnings added" (heading or <summary> form):
+        - top-level conversation / issue comments
+        - inline review comments (Files changed), including thread replies
+        - pull request review bodies
+        - merged diff / PR summary / objectives
+
+        ## GitHub MCP
+        Attempt to use the connected GitHub MCP server (connection may be
+        named GitHub-MCP or similar) to list issue comments and pull request
+        review comments for this PR.
+        Report:
+        - whether any GitHub MCP connection/tools were available
+        - exact connection name if known
+        - success or failure of listing comments
+        - count of issue comments and review comments retrieved
+        - whether any retrieved comment contains "Learnings added"
+        If MCP is unavailable, say so explicitly; do not guess.
+
+        ## Conclusion
+        One short paragraph: which path can feed a learnings documenter
+        (supplied context, MCP, both, or neither).
+
+        Then open ONE follow-up pull request against the default branch
+        containing that report file. Title:
+        "chore: post-merge comment access diagnostic".
+        Body must link to this merged PR and summarize the Conclusion section.
+        If follow-up PR creation fails, report the failure and do not claim
+        success.
 
     - name: "Document Learnings added comments after merge"
       enabled: false
