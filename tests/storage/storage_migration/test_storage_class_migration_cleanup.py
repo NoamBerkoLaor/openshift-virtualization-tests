@@ -34,11 +34,14 @@ class TestStorageMigrationRetentionPolicy:
     __test__ = False
 
     @pytest.mark.polarion("CNV-16297")
+    @pytest.mark.manual
     def test_retention_policy_default_behavior(self):
         """
         Test that default behavior is keepSource when retentionPolicy is not specified.
 
         STP Requirement: Default cleanup policy (P1)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -54,11 +57,14 @@ class TestStorageMigrationRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16298")
+    @pytest.mark.manual
     def test_namespace_level_retention_policy_delete_source(self):
         """
         Test namespace-level retentionPolicy=deleteSource.
 
         STP Requirement: Namespace-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -76,11 +82,14 @@ class TestStorageMigrationRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16299")
+    @pytest.mark.manual
     def test_spec_level_retention_policy_delete_source(self):
         """
         Test plan-level retentionPolicy=deleteSource.
 
         STP Requirement: Plan-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -98,11 +107,14 @@ class TestStorageMigrationRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16301")
+    @pytest.mark.manual
     def test_namespace_level_retention_policy_keep_source(self):
         """
         Test namespace-level retentionPolicy=keepSource.
 
         STP Requirement: Namespace-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -118,11 +130,14 @@ class TestStorageMigrationRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16302")
+    @pytest.mark.manual
     def test_spec_level_retention_policy_keep_source(self):
         """
         Test plan-level retentionPolicy=keepSource.
 
         STP Requirement: Plan-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -156,11 +171,14 @@ class TestStorageMigrationRetentionPolicyCombinedMode:
     __test__ = False
 
     @pytest.mark.polarion("CNV-16558")
+    @pytest.mark.manual
     def test_retention_policy_default_behavior_combined_mode(self):
         """
         Test that default behavior is keepSource with combined online+offline migration.
 
         STP Requirement: Default cleanup policy (P1)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Running VM (online migration) with source PVC/DataVolume
@@ -177,11 +195,14 @@ class TestStorageMigrationRetentionPolicyCombinedMode:
         """
 
     @pytest.mark.polarion("CNV-16559")
+    @pytest.mark.manual
     def test_namespace_level_retention_policy_delete_source_combined_mode(self):
         """
         Test namespace-level retentionPolicy=deleteSource with combined online+offline migration.
 
         STP Requirement: Namespace-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Running VM (online migration) with source PVC/DataVolume
@@ -200,11 +221,14 @@ class TestStorageMigrationRetentionPolicyCombinedMode:
         """
 
     @pytest.mark.polarion("CNV-16560")
+    @pytest.mark.manual
     def test_namespace_level_retention_policy_keep_source_combined_mode(self):
         """
         Test namespace-level retentionPolicy=keepSource with combined online+offline migration.
 
         STP Requirement: Namespace-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Running VM (online migration) with source PVC/DataVolume
@@ -221,11 +245,14 @@ class TestStorageMigrationRetentionPolicyCombinedMode:
         """
 
     @pytest.mark.polarion("CNV-16561")
+    @pytest.mark.manual
     def test_spec_level_retention_policy_delete_source_combined_mode(self):
         """
         Test plan-level retentionPolicy=deleteSource with combined online+offline migration.
 
         STP Requirement: Plan-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Running VM (online migration) with source PVC/DataVolume
@@ -244,11 +271,14 @@ class TestStorageMigrationRetentionPolicyCombinedMode:
         """
 
     @pytest.mark.polarion("CNV-16562")
+    @pytest.mark.manual
     def test_spec_level_retention_policy_keep_source_combined_mode(self):
         """
         Test plan-level retentionPolicy=keepSource with combined online+offline migration.
 
         STP Requirement: Plan-level cleanup policy (P0)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Running VM (online migration) with source PVC/DataVolume
@@ -286,12 +316,15 @@ class TestStorageMigrationCombinedRetentionPolicy:
     __test__ = False
 
     @pytest.mark.polarion("CNV-16305")
+    @pytest.mark.manual
     def test_namespace_delete_overrides_plan_keep(self):
         """
         Test combination of namespace-level and plan-level retentionPolicy.
 
         STP Requirement: Combined namespace and plan-level cleanup policies (P0)
         Namespace-level policy overrides plan-level policy for that namespace.
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Two VMs with source PVCs/DataVolumes in separate namespaces
@@ -310,12 +343,15 @@ class TestStorageMigrationCombinedRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16306")
+    @pytest.mark.manual
     def test_namespace_keep_overrides_plan_delete(self):
         """
         Test combination: namespace-level keepSource + plan-level deleteSource.
 
         STP Requirement: Combined namespace and plan-level cleanup policies (P0)
         Namespace-level policy overrides plan-level policy for that namespace.
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Two VMs with source PVCs/DataVolumes in separate namespaces
@@ -334,12 +370,15 @@ class TestStorageMigrationCombinedRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16307")
+    @pytest.mark.manual
     def test_namespace_and_plan_level_delete_source_retention_policy(self):
         """
         Test combination: namespace-level deleteSource + plan-level deleteSource.
 
         STP Requirement: Combined namespace and plan-level cleanup policies (P0)
         Both policies agree on deletion.
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Two VMs with source PVCs/DataVolumes in separate namespaces
@@ -357,12 +396,15 @@ class TestStorageMigrationCombinedRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16308")
+    @pytest.mark.manual
     def test_namespace_and_plan_level_keep_source_retention_policy(self):
         """
         Test combination: namespace-level keepSource + plan-level keepSource.
 
         STP Requirement: Combined namespace and plan-level cleanup policies (P0)
         Both policies agree on retention.
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - Two VMs with source PVCs/DataVolumes in separate namespaces
@@ -392,11 +434,14 @@ class TestStorageMigrationFailureRetentionPolicy:
     __test__ = False
 
     @pytest.mark.polarion("CNV-16309")
+    @pytest.mark.manual
     def test_failed_migration_with_delete_source_policy(self):
         """
         Test that source PVC/DataVolume is retained when migration fails with retentionPolicy=deleteSource.
 
         STP Requirement: Source volumes preserved on migration failure (P2)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
@@ -413,11 +458,14 @@ class TestStorageMigrationFailureRetentionPolicy:
         """
 
     @pytest.mark.polarion("CNV-16310")
+    @pytest.mark.manual
     def test_failed_migration_with_keep_source_policy(self):
         """
         Test that source PVC/DataVolume is retained when migration fails with retentionPolicy=keepSource.
 
         STP Requirement: Source volumes preserved on migration failure (P2)
+
+        STP: https://github.com/RedHatQE/openshift-virtualization-tests-design-docs/blob/main/stps/sig-storage/storage_mig_cleanup.md
 
         Preconditions:
             - VM with source PVC/DataVolume
