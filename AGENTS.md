@@ -43,6 +43,7 @@ Before writing ANY new code:
 - **ALWAYS use absolute imports** - NEVER use relative imports
 - **Prefer specific imports** - use `from module import func` for functions and constants. Use `from package import module` (then `module.Name`) when retaining the module name at the call site meaningfully improves readability (e.g. `libstuntime.ContinuousPing` vs a bare `ContinuousPing` that loses its origin). Never use bare `import module` without a `from` clause.
 - **ALWAYS use named arguments** - for function calls with more than one argument
+- **NEVER use mutable default arguments** - for lists, dictionaries, or other mutable collections, use `None` as the default and create a new collection inside the function when the argument is `None` to prevent shared state across calls.
 - **NEVER use single-letter variable names** - ALWAYS use descriptive, meaningful names
 - **No dead code** - every function, variable, fixture MUST be used or removed. Code marked with `# skip-unused-code` is excluded from dead code analysis (enforced via custom ruff plugin).
 - **Prefer direct attribute access** - use `foo.attr` directly. Save to variables only when: reusing the same attribute multiple times improves readability, or extracting clarifies intent.

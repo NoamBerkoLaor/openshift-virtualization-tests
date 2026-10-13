@@ -18,6 +18,13 @@ issue_enrichment: {}
 reviews:
   # Explicit instructions applied to every review, including PR description validation
   path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        ## Mutable default arguments
+        Never use mutable default arguments, such as lists or dictionaries.
+        Use `None` as the default and create a new collection inside the function
+        when the argument is `None` to prevent shared state across calls.
+
     - path: "utilities/unittests/**"
       instructions: |
         ## Unit Tests — Relaxed Rules
