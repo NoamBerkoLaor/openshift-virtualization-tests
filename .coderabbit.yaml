@@ -316,10 +316,9 @@ reviews:
       enabled: false
 
   post_merge_actions:
-    # Temporary diagnostic: discover which comment sources post-merge can read.
-    # Replace with the learnings action once comment access is confirmed.
+    # Temporary diagnostic kept disabled while testing learnings follow-up PRs.
     - name: "Diagnose post-merge comment access"
-      enabled: true
+      enabled: false
       prompt: |
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
@@ -362,7 +361,7 @@ reviews:
         success.
 
     - name: "Document Learnings added comments after merge"
-      enabled: false
+      enabled: true
       prompt: |
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
