@@ -316,8 +316,7 @@ reviews:
       enabled: false
 
   post_merge_actions:
-    # Temporary diagnostic: discover which comment sources post-merge can read.
-    # Replace with the learnings action once comment access is confirmed.
+    # Temporary diagnostic kept disabled while testing learnings follow-up PRs.
     - name: "Diagnose post-merge comment access"
       enabled: false
       prompt: |
