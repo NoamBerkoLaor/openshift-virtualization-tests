@@ -18,6 +18,13 @@ issue_enrichment: {}
 reviews:
   # Explicit instructions applied to every review, including PR description validation
   path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        ## Safe YAML parsing
+        Never use `yaml.load()` on untrusted input; use `yaml.safe_load()` instead.
+        Unsafe YAML loaders can construct Python objects and execute code, and
+        PyYAML 6+ requires an explicit `Loader` argument for `yaml.load()`.
+
     - path: "utilities/unittests/**"
       instructions: |
         ## Unit Tests — Relaxed Rules

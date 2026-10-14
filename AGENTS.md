@@ -35,6 +35,7 @@ Before writing ANY new code:
 
 ### Python Requirements
 
+- **Safe YAML parsing REQUIRED** - NEVER use `yaml.load()` on untrusted input; use `yaml.safe_load()` instead. Unsafe YAML loaders can construct Python objects and execute code, and PyYAML 6+ requires an explicit `Loader` argument for `yaml.load()`.
 - **Type hints MANDATORY** - mypy strict mode in `libs/`, all new public functions under utilities MUST be typed
 - **Use `TYPE_CHECKING` for type-only imports** - wrap imports needed solely for type hints in `if TYPE_CHECKING:` to avoid runtime overhead and circular imports
 - **Google-format docstrings REQUIRED** - for all public functions with non-obvious return values OR side effects
