@@ -49,6 +49,12 @@ Before writing ANY new code:
 - **Imports always at the top of the module** - do not import inside functions
 - **`tests/conftest.py` and feature-level `conftest.py` files are for fixtures only** - helper functions, utility functions, and non-test classes must NOT be defined in these conftest.py files or in test_*.py; place them in dedicated utility modules instead (test classes used to group pytest tests are allowed in test_*.py). The root `conftest.py` is exempt — it holds only pytest hooks and plugin registration (see "conftest.py Architecture" below).
 
+### Safe Deserialization
+
+- **NEVER** deserialize untrusted data with `pickle.loads()` — pickle deserialization can execute arbitrary code.
+- Prefer `json.loads()` or another safe serialization format, and validate the decoded data before use.
+- Treat untrusted pickle deserialization in Python code as a **CRITICAL security finding**.
+
 ### HCO CR (v1)
 
 CNV 5.0+ uses HyperConverged **v1** only. Never pin `api_version` to v1beta1.

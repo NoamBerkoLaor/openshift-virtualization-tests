@@ -18,6 +18,14 @@ issue_enrichment: {}
 reviews:
   # Explicit instructions applied to every review, including PR description validation
   path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        ## Safe Deserialization
+        Never deserialize untrusted data with `pickle.loads()`, because pickle
+        deserialization can execute arbitrary code. Prefer `json.loads()` or another
+        safe serialization format, and validate the decoded data before use.
+        Treat untrusted pickle deserialization as a CRITICAL security finding.
+
     - path: "utilities/unittests/**"
       instructions: |
         ## Unit Tests — Relaxed Rules
