@@ -235,6 +235,7 @@ When reviewing quarantine PRs, verify the **quarantine mechanism matches the fai
 - **Use implicit boolean** - `if items:` NOT `if len(items) > 0:` or `if items != []:`
 - **Use identity for None** - `if x is None:` NOT `if x == None:`
 - **NEVER compare to True/False** - `if flag:` NOT `if flag == True:`
+- **NEVER compare strings with `is` or `is not`** - use `==` or `!=` for value equality. Identity comparisons do not reliably determine whether strings contain the same text.
 
 ### Tests Directory Organization
 
