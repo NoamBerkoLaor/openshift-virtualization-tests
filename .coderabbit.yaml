@@ -360,7 +360,7 @@ reviews:
         If follow-up PR creation fails, report the failure and do not claim
         success.
 
-    - name: "Document Learnings added comments after merge"
+    - name: "CodeRabbit learnings from merged PR"
       enabled: true
       prompt: |
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
@@ -444,11 +444,11 @@ reviews:
         thread), do not open a follow-up PR; report that no update was needed.
         Otherwise open ONE follow-up pull request against the default branch
         for this merged PR. Include every remaining (unacknowledged) learning
-        from this merge in that single PR. Title the follow-up PR exactly:
-        "CodeRabbit learnings from PR <PR number>"
-        (use this merged PR's number, for example
-        "CodeRabbit learnings from PR 50"). Put a link to this merged PR in
-        the follow-up PR body.
+        from this merge in that single PR. FOLLOW-UP PR TITLE (mandatory when opening a PR):
+        Use exactly this title pattern, substituting this merged PR's number:
+        CodeRabbit learnings from PR <PR number>
+        Example: CodeRabbit learnings from PR 55. Put a link to
+        this merged PR in the follow-up PR body.
         If follow-up PR creation fails, report the failure in the post-merge
         result comment and do not claim success.
         If comments could not be read at all (PR context missing them and
