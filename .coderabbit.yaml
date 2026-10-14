@@ -444,7 +444,10 @@ reviews:
         thread), do not open a follow-up PR; report that no update was needed.
         Otherwise open ONE follow-up pull request against the default branch
         for this merged PR. Include every remaining (unacknowledged) learning
-        from this merge in that single PR. Put a link to this merged PR in
+        from this merge in that single PR. Title the follow-up PR exactly:
+        "CodeRabbit learnings from PR <PR number>"
+        (use this merged PR's number, for example
+        "CodeRabbit learnings from PR 50"). Put a link to this merged PR in
         the follow-up PR body.
         If follow-up PR creation fails, report the failure in the post-merge
         result comment and do not claim success.
