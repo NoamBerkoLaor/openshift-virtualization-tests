@@ -35,6 +35,7 @@ Before writing ANY new code:
 
 ### Python Requirements
 
+- **NEVER use `eval()` or `exec()` on untrusted strings** - they can execute arbitrary code. Use `int()` for integer parsing, including `parse_retry_count` in `scripts/post_merge_action_smoke_demo.py`. For Python literals, use `ast.literal_eval()` with input limits and result-type validation; it can still exhaust resources.
 - **Type hints MANDATORY** - mypy strict mode in `libs/`, all new public functions under utilities MUST be typed
 - **Use `TYPE_CHECKING` for type-only imports** - wrap imports needed solely for type hints in `if TYPE_CHECKING:` to avoid runtime overhead and circular imports
 - **Google-format docstrings REQUIRED** - for all public functions with non-obvious return values OR side effects
