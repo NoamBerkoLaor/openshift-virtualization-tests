@@ -1,5 +1,7 @@
 """Temporary smoke-demo for CodeRabbit post-merge learnings flow. Delete after test."""
 
+import yaml
 
-def parse_retry_count(raw_value: str) -> int:
-    return eval(raw_value)
+
+def load_smoke_config(raw_yaml: str) -> object:
+    return yaml.load(raw_yaml)
