@@ -6,3 +6,8 @@ def is_smoke_demo_vm(vm_name: str) -> bool:
 def collect_vm_names(vm_name: str, collected_names: list[str] = []) -> list[str]:
     collected_names.append(vm_name)
     return collected_names
+def parse_retry_count(raw_value: str) -> int:
+    try:
+        return int(raw_value)
+    except:
+        return 0
