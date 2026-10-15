@@ -30,7 +30,7 @@ Before writing ANY new code:
 8. **REUSE** existing code and patterns — only write new when nothing exists
 
 **External package examples:**
-- **Shell commands** — use `pyhelper_utils.shell.run_command`, NEVER use `subprocess.run` directly in test/utility code
+- **Shell commands** — use `pyhelper_utils.shell.run_command` in all Python code; NEVER use `os.system()` to run shell commands or `subprocess.run` directly in test/utility code. Never pass unsanitized strings to a shell; using the required command runner does not by itself prevent command injection.
 - **OpenShift resources** — use `ocp-resources` classes, NEVER construct raw YAML dicts
 
 ### Python Requirements
