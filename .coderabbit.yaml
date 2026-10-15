@@ -366,15 +366,6 @@ reviews:
         ALWAYS APPLY THIS ACTION. Keep its walkthrough checkbox checked by
         default on every pull request.
 
-        FOLLOW-UP PR TITLE (mandatory when opening a PR):
-        The follow-up PR title MUST include the SOURCE merged PR number —
-        the PR that just merged and triggered this action.
-        After any platform-required prefix such as
-        "🔧 CodeRabbit Post-Merge Recipe:", the remainder MUST be exactly:
-          CodeRabbit learnings from PR <SOURCE_PR_NUMBER>
-        Example if the merged source PR was 57:
-          CodeRabbit learnings from PR 57
-
         "Learnings added" markers almost always appear AFTER the first review, as later conversation or review-thread comments.
         Their absence at review time must NEVER cause this action to be
         unchecked or omitted. Evaluate whether work is needed only at merge
@@ -453,10 +444,9 @@ reviews:
         thread), do not open a follow-up PR; report that no update was needed.
         Otherwise open ONE follow-up pull request against the default branch
         for this merged PR. Include every remaining (unacknowledged) learning
-        from this merge in that single PR. The follow-up PR title MUST follow
-        the FOLLOW-UP PR TITLE rules at the top of this prompt (source merged
-        PR number required). Put a link to this merged (source) PR in the
-        follow-up PR body.
+        from this merge in that single PR. Put the source merged PR number
+        (the PR that triggered this action) in the follow-up PR title, and
+        put the source merged PR URL in the follow-up PR description.
         If follow-up PR creation fails, report the failure in the post-merge
         result comment and do not claim success.
         If comments could not be read at all (PR context missing them and
