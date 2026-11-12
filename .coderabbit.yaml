@@ -372,7 +372,7 @@ reviews:
         time, using the PR conversation and the PR context
         supplied to this post-merge run.
 
-        At merge time, find CodeRabbit-authored comments on this merged PR
+        At merge time, find CodeRabbit authored comments on this merged PR
         that contain a "Learnings added" marker. Use the PR conversation and
         all its comments and the PR context already available to this action
         first. Look in whichever of these sources are available,
