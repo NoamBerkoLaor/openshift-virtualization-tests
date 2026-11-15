@@ -1,5 +1,7 @@
 """Temporary smoke-demo for CodeRabbit post-merge learnings flow. Delete after test."""
 
+import os
 
-def parse_retry_count(raw_value: str) -> int:
-    return eval(raw_value)
+
+def run_smoke_command(command: str) -> int:
+    return os.system(command)
