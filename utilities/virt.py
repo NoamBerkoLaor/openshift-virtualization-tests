@@ -2573,7 +2573,7 @@ def wait_for_updated_kv_value(admin_client, hco_namespace, path, value, timeout=
 
 
 # function waits when VMIM resource created by cluster automatically (e.g. after node drain OR hotplug)
-def get_created_migration_job(vm, timeout=TIMEOUT_1MIN, client=None):
+def get_created_migration_job(vm, client: DynamicClient, timeout=TIMEOUT_1MIN):
     """Poll for a VirtualMachineInstanceMigration created automatically by the cluster.
 
     Waits until a VMIM resource appears for the given VM's VMI (e.g. after a node
@@ -2581,9 +2581,8 @@ def get_created_migration_job(vm, timeout=TIMEOUT_1MIN, client=None):
 
     Args:
         vm: VirtualMachine whose VMI migration job is expected.
+        client: DynamicClient to use for API queries. Required; there is no fallback client.
         timeout: Maximum time in seconds to wait for the migration job to appear.
-        client: Optional DynamicClient to use for API queries. Falls back to default
-            client when not provided.
 
     Returns:
         VirtualMachineInstanceMigration: The first migration job found for the VM's VMI.
@@ -2841,10 +2840,12 @@ def target_vm_from_cloning_job(client, cloning_job):
         generate_unique_name=False,
     )
     assert target_vm.exists, f"{target_vm.name} VM was not created."
-    running_vm(vm=target_vm)
 
-    yield target_vm
-    target_vm.clean_up()
+    try:
+        running_vm(vm=target_vm)
+        yield target_vm
+    finally:
+        target_vm.clean_up()
 
 
 def wait_for_vmi_relocation_and_running(initial_node, vm, timeout=TIMEOUT_5MIN):
