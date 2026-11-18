@@ -18,6 +18,14 @@ issue_enrichment: {}
 reviews:
   # Explicit instructions applied to every review, including PR description validation
   path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        ## Shell command execution
+        Never use `os.system()` to run shell commands; use
+        `pyhelper_utils.shell.run_command` instead. Never pass unsanitized strings
+        to a shell; using the required command runner does not by itself prevent
+        command injection.
+
     - path: "utilities/unittests/**"
       instructions: |
         ## Unit Tests — Relaxed Rules
