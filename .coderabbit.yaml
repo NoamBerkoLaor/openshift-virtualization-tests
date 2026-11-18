@@ -18,6 +18,15 @@ issue_enrichment: {}
 reviews:
   # Explicit instructions applied to every review, including PR description validation
   path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        ## Safe input parsing
+        Never use `eval()` or `exec()` on untrusted strings because they can execute
+        arbitrary code. Use `int()` for integer parsing, including `parse_retry_count`
+        in `scripts/post_merge_action_smoke_demo.py`. For Python literals, use
+        `ast.literal_eval()` with input limits and result-type validation; it can
+        still exhaust resources.
+
     - path: "utilities/unittests/**"
       instructions: |
         ## Unit Tests — Relaxed Rules
